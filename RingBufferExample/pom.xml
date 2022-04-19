@@ -74,7 +74,7 @@
 						</goals>
 					</execution>
 					<!-- fails the build if instruction or branch coverage is less than 100% -->
-					<!--
+
 					<execution>
 						<id>jacoco-check</id>
 						<phase>test</phase>
@@ -104,7 +104,7 @@
 							</rules>
 						</configuration>
 					</execution>
-					-->
+
 				</executions>
 			</plugin>
 			<plugin>

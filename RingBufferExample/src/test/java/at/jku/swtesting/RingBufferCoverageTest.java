@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 class RingBufferCoverageTest {
@@ -154,6 +155,20 @@ class RingBufferCoverageTest {
         Iterator<String> actualIterator = ringBuffer.iterator();
         assertThrows(UnsupportedOperationException.class, () -> {
             actualIterator.remove();
+        });
+    }
+
+    @Test
+    void testNextIterator() {
+        setUpBuffer(new String[] { "1", "2", "3" });
+        Iterator<String> actualIterator = ringBuffer.iterator();
+
+        assertEquals("1", actualIterator.next());
+        assertEquals("2", actualIterator.next());
+        assertEquals("3", actualIterator.next());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            actualIterator.next();
         });
     }
 
