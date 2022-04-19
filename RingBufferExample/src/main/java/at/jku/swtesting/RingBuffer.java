@@ -66,12 +66,13 @@ public class RingBuffer<Item> implements Iterable<Item> {
 	 * @param item to be appended to the buffer.
 	 */
 	public void enqueue(Item item) {
-		a[last] = item;
-		last = (last + 1) % a.length; // wrap-around
 		if (N < a.length) {
+			a[last] = item;
+
+			last = (last + 1) % a.length; // wrap-around
 			N++;
 		} else {
-			first = (first + 1) % a.length;
+			a[first] = item;
 		}
 	}
 	
