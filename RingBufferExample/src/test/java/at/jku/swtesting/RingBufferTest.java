@@ -14,17 +14,16 @@ import java.util.stream.Stream;
 
 class RingBufferTest {
 
-	private static final int RING_BUFFER_CAPACITY = 3;
 	private RingBuffer<String> ringBuffer;
 
 	@BeforeEach
 	void setUp() {
-		ringBuffer = new RingBuffer<>(RING_BUFFER_CAPACITY);
+		ringBuffer = new RingBuffer<>(3);
 	}
 
 	@Test
 	void testRingBufferConstructor() {
-		assertNotNull(ringBuffer);
+		assertTrue(ringBuffer.isEmpty());
 	}
 
 	@Test
@@ -39,7 +38,7 @@ class RingBufferTest {
 	@MethodSource("provideDifferentStringCapacties")
 	void testCapacity(String... bufferElements) {
 		setUpBuffer(bufferElements);
-		assertEquals(RING_BUFFER_CAPACITY, ringBuffer.capacity());
+		assertEquals(3, ringBuffer.capacity());
 	}
 
 	@ParameterizedTest
@@ -67,19 +66,19 @@ class RingBufferTest {
 		assertFalse(ringBuffer.isFull());
 	}
 
-	@ParameterizedTest
-	@MethodSource("provideDifferentSizes")
-	void testEnqueueOverriding(int referenceSize, String... bufferElements) {
-		for (int i = 0; i < bufferElements.length; i++) {
-			ringBuffer.enqueue(bufferElements[i]);
-			if (i > RING_BUFFER_CAPACITY) {
-				// if we reach the max capacity of the buffer the first element gets overridden
-				assertEquals(bufferElements[i], ringBuffer.peek());
-			} else {
-				assertEquals(bufferElements[i], getLastBufferElement());
-			}
-		}
-	}
+	@Test
+	void testEnqueueOverriding() {
+		ringBuffer.enqueue("a");
+		ringBuffer.enqueue("b");
+		ringBuffer.enqueue("c");
+
+		ringBuffer.enqueue("d");
+		assertEquals("d", ringBuffer.peek());
+		ringBuffer.enqueue("e");
+		assertEquals("e", ringBuffer.peek());
+		ringBuffer.enqueue("f");
+		assertEquals("f", ringBuffer.peek());
+    }
 
 	private String getLastBufferElement() {
 		String element = "";
@@ -158,6 +157,9 @@ class RingBufferTest {
 		});
 	}
 
+
+	//region ------------ Helper methods ------------
+
 	private static Stream<Arguments> provideDifferentStringCapacties() {
 		//@formatter:off
 		return Stream.of(
@@ -173,12 +175,12 @@ class RingBufferTest {
 		return Stream.of(
 				Arguments.of(1, (Object) new String[] { "1" }),
 				Arguments.of(2, (Object) new String[] { "1", "2" }),
-				Arguments.of(RING_BUFFER_CAPACITY, (Object) new String[] { "1", "2", "3" }),
-				Arguments.of(RING_BUFFER_CAPACITY, (Object) new String[] { "1", "2", "3", "4" }),
-				Arguments.of(RING_BUFFER_CAPACITY, (Object) new String[] { "1", "2", "3", "4", "5" }),
-				Arguments.of(RING_BUFFER_CAPACITY, (Object) new String[] { "1", "2", "3", "4", "5", "6" }),
-				Arguments.of(RING_BUFFER_CAPACITY, (Object) new String[] { "1", "2", "3", "4", "5", "6", "7" }),
-				Arguments.of(RING_BUFFER_CAPACITY, (Object) new String[] { "1", "2", "3", "4", "5", "6", "7", "8" }) 
+				Arguments.of(3, (Object) new String[] { "1", "2", "3" }),
+				Arguments.of(3, (Object) new String[] { "1", "2", "3", "4" }),
+				Arguments.of(3, (Object) new String[] { "1", "2", "3", "4", "5" }),
+				Arguments.of(3, (Object) new String[] { "1", "2", "3", "4", "5", "6" }),
+				Arguments.of(3, (Object) new String[] { "1", "2", "3", "4", "5", "6", "7" }),
+				Arguments.of(3, (Object) new String[] { "1", "2", "3", "4", "5", "6", "7", "8" })
 			);
 	}
 		//@formatter:on
@@ -188,4 +190,6 @@ class RingBufferTest {
 			ringBuffer.enqueue(element);
 		}
 	}
+
+	//endregion
 }
