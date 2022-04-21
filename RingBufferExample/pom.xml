@@ -73,8 +73,8 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
-					<!-- fails the build if instruction or branch coverage is less than 100% -->
 
+					<!-- fails the build if instruction or branch coverage is less than 100% -->
 					<execution>
 						<id>jacoco-check</id>
 						<phase>test</phase>
@@ -125,12 +125,11 @@
 						<goals>
 							<goal>mutationCoverage</goal>
 						</goals>
+
 						<!-- fails the build if mutation score is less than 100% -->
-						<!--
 						<configuration>
 							<mutationThreshold>100</mutationThreshold>
 						</configuration>
-						-->
 					</execution>
 				</executions>
 			</plugin>						
